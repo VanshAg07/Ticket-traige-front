@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ticket — AI-Powered Support Ticket Triage</title>
+  <meta name="description"
+    content="Instantly classify, prioritize, and analyze support tickets with AI-powered heuristic logic. No external APIs required." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Background particles -->
+  <div class="bg-particles" aria-hidden="true">
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" role="banner">
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2L24 8V20L14 26L4 20V8L14 2Z" fill="white" />
+            <path d="M9 14L12.5 17.5L19 11" stroke="white" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <defs>
+              <linearGradient id="logoGrad" x1="4" y1="2" x2="24" y2="26" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366f1" />
+                <stop offset="1" stop-color="#8b5cf6" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">Ticket</span>
+        <!-- <span class="logo-badge">v4</span> -->
+      </div>
+      <nav class="nav-stats" aria-label="Statistics">
+        <div class="stat-pill" id="totalCount">
+          <span class="stat-label">Analyzed</span>
+          <span class="stat-value" id="totalCountValue">—</span>
+        </div>
+        <div class="status-dot-wrap">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="status-text" id="statusText">Connecting...</span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main" id="main-content">
+    <div class="container">
+
+      <!-- Hero -->
+      <section class="hero" aria-label="Introduction">
+        <h1 class="hero-title">
+          Intelligent Ticket
+          <span class="gradient-text"> Triage Engine</span>
+        </h1>
+        <p class="hero-subtitle">
+          Classify, prioritize, and extract insights from support tickets using local AI heuristics — no external APIs.
+        </p>
+        <div class="feature-pills" aria-label="Features">
+          <span class="feature-pill">⚡ Real-time Analysis</span>
+          <span class="feature-pill">🛡️ Security Fast-Track</span>
+          <span class="feature-pill">💳 Refund Priority</span>
+          <span class="feature-pill">📊 Confidence Scoring</span>
+        </div>
+      </section>
+
+      <!-- Compose + Result panel -->
+      <div class="workspace">
+
+        <!-- Compose Panel -->
+        <section class="panel compose-panel" aria-label="Submit a ticket">
+          <div class="panel-header">
+            <div class="panel-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            </div>
+            <h2 class="panel-title">Submit Ticket</h2>
+          </div>
+          <div class="panel-body">
+            <form id="ticketForm" novalidate aria-label="Ticket submission form">
+              <div class="field-group">
+                <label class="field-label" for="ticketMessage">
+                  Describe your issue
+                  <span class="char-count" id="charCount">0 / 5000</span>
+                </label>
+                <textarea id="ticketMessage" name="message" class="textarea"
+                  placeholder="e.g. I was charged twice on my invoice this month and need an urgent refund. The payment shows $99 twice in my billing history..."
+                  rows="8" maxlength="5000" aria-required="true" aria-describedby="messageError"></textarea>
+                <div class="field-error" id="messageError" role="alert" aria-live="polite"></div>
+              </div>
+
+              <button type="submit" class="btn-analyze" id="analyzeBtn" aria-label="Analyze ticket">
+                <span class="btn-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                    <path d="M11 8v6M8 11h6" />
+                  </svg>
+                </span>
+                <span class="btn-text">Analyze Ticket</span>
+                <span class="btn-spinner" aria-hidden="true"></span>
+              </button>
+            </form>
+
+            <!-- Sample tickets quick-fill -->
+            <div class="samples-section">
+              <p class="samples-label">Try a sample:</p>
+              <div class="samples-grid">
+                <button class="sample-btn" data-sample="billing" type="button">💳 Billing</button>
+                <button class="sample-btn" data-sample="technical" type="button">🔧 Technical</button>
+                <button class="sample-btn" data-sample="security" type="button">🛡️ Security</button>
+                <button class="sample-btn" data-sample="feature" type="button">✨ Feature</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Result Panel -->
+        <section class="panel result-panel" aria-label="Analysis result" aria-live="polite">
+          <div class="panel-header">
+            <div class="panel-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+            </div>
+            <h2 class="panel-title">Analysis Result</h2>
+          </div>
+          <div class="panel-body">
+
+            <!-- Empty state -->
+            <div class="empty-state" id="emptyState">
+              <div class="empty-icon" aria-hidden="true">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+              </div>
+              <p class="empty-title">No analysis yet</p>
+              <p class="empty-sub">Submit a ticket to see AI-powered triage results here</p>
+            </div>
+
+            <!-- Loading state -->
+            <div class="loading-state hidden" id="loadingState" aria-label="Analyzing...">
+              <div class="pulse-ring" aria-hidden="true"></div>
+              <p class="loading-text">Analyzing ticket...</p>
+              <div class="loading-steps" aria-hidden="true">
+                <div class="step" id="step1">Normalizing text</div>
+                <div class="step" id="step2">Classifying category</div>
+                <div class="step" id="step3">Scoring priority</div>
+                <div class="step" id="step4">Extracting signals</div>
+              </div>
+            </div>
+
+            <!-- Error state -->
+            <div class="error-state hidden" id="errorState" role="alert">
+              <div class="error-icon" aria-hidden="true">⚠️</div>
+              <p class="error-title">Analysis Failed</p>
+              <p class="error-message" id="errorMessage"></p>
+              <button class="btn-retry" id="retryBtn" type="button">Try Again</button>
+            </div>
+
+            <!-- Result content -->
+            <div class="result-content hidden" id="resultContent">
+              <!-- Category + Priority row -->
+              <div class="result-badges">
+                <div class="badge-card" id="categoryBadge">
+                  <span class="badge-label">Category</span>
+                  <span class="badge-value" id="categoryValue"></span>
+                </div>
+                <div class="badge-card priority-badge" id="priorityBadge">
+                  <span class="badge-label">Priority</span>
+                  <div class="priority-display">
+                    <span class="priority-code" id="priorityCode"></span>
+                    <span class="priority-label" id="priorityLabelVal"></span>
+                  </div>
+                </div>
+                <div class="badge-card" id="urgencyBadge">
+                  <span class="badge-label">Urgency</span>
+                  <span class="badge-value" id="urgencyValue"></span>
+                </div>
+              </div>
+
+              <!-- Confidence meter -->
+              <div class="confidence-section">
+                <div class="confidence-header">
+                  <span class="confidence-label">Confidence Score</span>
+                  <span class="confidence-value" id="confidencePercent"></span>
+                </div>
+                <div class="confidence-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                  aria-valuemax="100" id="confidenceBar">
+                  <div class="confidence-bar-fill" id="confidenceFill"></div>
+                </div>
+              </div>
+
+              <!-- Keywords -->
+              <div class="keywords-section">
+                <p class="section-label">Detected Keywords</p>
+                <div class="keywords-list" id="keywordsList"></div>
+              </div>
+
+              <!-- Signals -->
+              <div class="signals-section">
+                <p class="section-label">Analysis Signals</p>
+                <ul class="signals-list" id="signalsList"></ul>
+              </div>
+
+              <!-- Custom flags -->
+              <div class="flags-section hidden" id="flagsSection">
+                <p class="section-label">⚡ Special Flags</p>
+                <div class="flags-list" id="flagsList"></div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </div>
+
+      <!-- Ticket History -->
+      <section class="history-section" aria-label="Previously analyzed tickets">
+        <div class="history-header">
+          <div>
+            <h2 class="history-title">Ticket History</h2>
+            <p class="history-subtitle">Previously analyzed tickets, latest first</p>
+          </div>
+          <div class="history-controls">
+            <select class="filter-select" id="categoryFilter" aria-label="Filter by category">
+              <option value="">All Categories</option>
+              <option value="Billing">Billing</option>
+              <option value="Technical">Technical</option>
+              <option value="Account">Account</option>
+              <option value="Feature Request">Feature Request</option>
+              <option value="Other">Other</option>
+            </select>
+            <select class="filter-select" id="priorityFilter" aria-label="Filter by priority">
+              <option value="">All Priorities</option>
+              <option value="P0">P0 — Critical</option>
+              <option value="P1">P1 — High</option>
+              <option value="P2">P2 — Medium</option>
+              <option value="P3">P3 — Low</option>
+            </select>
+            <button class="btn-refresh" id="refreshBtn" type="button" aria-label="Refresh ticket list">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading skeleton -->
+        <div class="tickets-loading hidden" id="ticketsLoading" aria-label="Loading tickets">
+          <div class="skeleton-row"></div>
+          <div class="skeleton-row"></div>
+          <div class="skeleton-row"></div>
+        </div>
+
+        <!-- Empty history -->
+        <div class="history-empty hidden" id="historyEmpty">
+          <p>No tickets analyzed yet. Submit your first ticket above!</p>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap" id="tableWrap">
+          <table class="tickets-table" id="ticketsTable" aria-label="Ticket history">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Message</th>
+                <th scope="col">Category</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Urgency</th>
+                <th scope="col">Confidence</th>
+                <th scope="col">Flags</th>
+                <th scope="col">Created</th>
+              </tr>
+            </thead>
+            <tbody id="ticketsTableBody">
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p>Ticket — AI-Powered Support Ticket Triage. Built with Node.js, Express, SQLite, and local NLP heuristics.</p>
+      <p class="footer-note">No external AI/LLM APIs used. All analysis runs locally.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
